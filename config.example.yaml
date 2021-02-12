@@ -1,0 +1,4 @@
+sugar:
+  host: https://sugar.example
+  username: username
+  password: hunter2
