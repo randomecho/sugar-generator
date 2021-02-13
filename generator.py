@@ -1,3 +1,4 @@
+import argparse
 import requests
 import logging
 import os
@@ -25,6 +26,12 @@ class Sync:
 
 
     def __init__(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-v", dest="verbose",
+            action='store_true', default=False,
+            help="Toggle verbose mode - stdout or logfile")
+        self.args = parser.parse_args()
+
         logging.basicConfig(filename='/tmp/sugar-generator.log',level=logging.DEBUG,format='%(asctime)s :: %(message)s')
 
         self.load_config()
@@ -44,7 +51,7 @@ class Sync:
             self.password = config['sugar']['password']
 
         except FileNotFoundError:
-            print("Configuration file not found at: {}".format(self.config_file))
+            self.logline("Configuration file not found at: {}".format(self.config_file))
             exit(1)
 
 
@@ -65,11 +72,18 @@ class Sync:
             self.oauth_token = response['access_token']
             self.refresh_token = response['refresh_token']
             self.auth_headers = {'OAuth-Token': self.oauth_token, 'Content-Type': 'application/json'}
-            logging.info("=== Logged in to {}".format(self.sugar_host))
+            self.logline("=== Logged in to {}".format(self.sugar_host))
         else:
-            logging.info("!!! Could not log in")
+            self.logline("!!! Could not log in")
 
         return
+
+
+    def logline(self, line):
+        if self.args.verbose:
+            print(line)
+        else:
+            logging.info(line)
 
 
     def run(self):
@@ -78,5 +92,5 @@ class Sync:
 
 
 sync = Sync()
-print("\n= Generating...")
+sync.logline("= Generating...")
 sync.run()
