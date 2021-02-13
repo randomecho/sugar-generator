@@ -30,6 +30,9 @@ class Sync:
         parser.add_argument("-v", dest="verbose",
             action='store_true', default=False,
             help="Toggle verbose mode - stdout or logfile")
+        parser.add_argument("-m", dest="module",
+            default='accounts',
+            help="Which module to create record in")
         self.args = parser.parse_args()
 
         logging.basicConfig(filename='/tmp/sugar-generator.log',level=logging.DEBUG,format='%(asctime)s :: %(message)s')
@@ -40,7 +43,7 @@ class Sync:
     def generate_records(self):
         sync.logline("Generating...")
         payload = {'name': 'Example Record'}
-        r = requests.post(self.sugar_host + 'Accounts', headers=self.auth_headers, json=payload)
+        r = requests.post(self.sugar_host + self.args.module, headers=self.auth_headers, json=payload)
         response = r.json()
 
         if 'id' in response and 'name' in response:
