@@ -38,7 +38,15 @@ class Sync:
 
 
     def generate_records(self):
-        pass
+        sync.logline("Generating...")
+        payload = {'name': 'Example Record'}
+        r = requests.post(self.sugar_host + 'Accounts', headers=self.auth_headers, json=payload)
+        response = r.json()
+
+        if 'id' in response and 'name' in response:
+            self.logline("Created: {} {}".format(response['id'], response['name']))
+        else:
+            self.logline("Error: {}".format(response))
 
 
     def load_config(self):
@@ -72,9 +80,9 @@ class Sync:
             self.oauth_token = response['access_token']
             self.refresh_token = response['refresh_token']
             self.auth_headers = {'OAuth-Token': self.oauth_token, 'Content-Type': 'application/json'}
-            self.logline("=== Logged in to {}".format(self.sugar_host))
+            self.logline("Logged in to {}".format(self.sugar_host))
         else:
-            self.logline("!!! Could not log in")
+            self.logline("! Could not log in")
 
         return
 
@@ -92,5 +100,4 @@ class Sync:
 
 
 sync = Sync()
-sync.logline("= Generating...")
 sync.run()
