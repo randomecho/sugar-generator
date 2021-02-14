@@ -57,7 +57,7 @@ class Sync:
             response = r.json()
 
             if 'id' in response and 'name' in response:
-                self.logline("Created: {} {}".format(response['id'], response['name']))
+                self.logline("Created: {}/{} {}".format(self.args.module, response['id'], response['name']))
             else:
                 self.logline("Error: {}".format(response))
 
