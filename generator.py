@@ -1,6 +1,7 @@
 import argparse
-import requests
+import faker
 import logging
+import requests
 import os
 import sys
 import urllib
@@ -48,9 +49,10 @@ class Sync:
 
         requested_max_num = int(self.args.max_num_to_create,10)
         start_count = self.max_limit if requested_max_num > self.max_limit else requested_max_num
+        fake = faker.Faker()
 
         for x in range(start_count):
-            payload = {'name': 'Example Record'}
+            payload = {'name': fake.name()}
             r = requests.post(self.sugar_host + self.args.module, headers=self.auth_headers, json=payload)
             response = r.json()
 
