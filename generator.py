@@ -31,8 +31,11 @@ class Sync:
             action='store_true', default=False,
             help="Toggle verbose mode - stdout or logfile")
         parser.add_argument("-m", dest="module",
-            default='accounts',
+            default='Accounts',
             help="Which module to create record in")
+        parser.add_argument("-n", default='1',
+            dest="max_num_to_create", metavar='number',
+            help="How many records to create")
         self.args = parser.parse_args()
 
         logging.basicConfig(filename='/tmp/sugar-generator.log',level=logging.DEBUG,format='%(asctime)s :: %(message)s')
@@ -42,14 +45,16 @@ class Sync:
 
     def generate_records(self):
         sync.logline("Generating...")
-        payload = {'name': 'Example Record'}
-        r = requests.post(self.sugar_host + self.args.module, headers=self.auth_headers, json=payload)
-        response = r.json()
 
-        if 'id' in response and 'name' in response:
-            self.logline("Created: {} {}".format(response['id'], response['name']))
-        else:
-            self.logline("Error: {}".format(response))
+        for x in range(int(self.args.max_num_to_create,10)):
+            payload = {'name': 'Example Record'}
+            r = requests.post(self.sugar_host + self.args.module, headers=self.auth_headers, json=payload)
+            response = r.json()
+
+            if 'id' in response and 'name' in response:
+                self.logline("Created: {} {}".format(response['id'], response['name']))
+            else:
+                self.logline("Error: {}".format(response))
 
 
     def load_config(self):
