@@ -13,6 +13,7 @@ http.client._MAXHEADERS = 10000
 
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger('faker').setLevel(logging.ERROR)
 
 
 class Sync:
