@@ -22,7 +22,7 @@ class Sync:
     oauth_token = None
     refresh_token = None
     auth_headers = None
-    bulk_limit = 200
+    max_limit = 10
 
 
     def __init__(self):
@@ -46,7 +46,10 @@ class Sync:
     def generate_records(self):
         sync.logline("Generating...")
 
-        for x in range(int(self.args.max_num_to_create,10)):
+        requested_max_num = int(self.args.max_num_to_create,10)
+        start_count = self.max_limit if requested_max_num > self.max_limit else requested_max_num
+
+        for x in range(start_count):
             payload = {'name': 'Example Record'}
             r = requests.post(self.sugar_host + self.args.module, headers=self.auth_headers, json=payload)
             response = r.json()
