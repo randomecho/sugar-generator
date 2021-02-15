@@ -38,6 +38,8 @@ class Sync:
         parser.add_argument("-n", default='1',
             dest="max_num_to_create", metavar='number',
             help="How many records to create")
+        parser.add_argument("-p", dest="prefix",
+            help="Prefix of all generated records")
         self.args = parser.parse_args()
 
         logging.basicConfig(filename='/tmp/sugar-generator.log',level=logging.DEBUG,format='%(asctime)s :: %(message)s')
@@ -51,9 +53,10 @@ class Sync:
         requested_max_num = int(self.args.max_num_to_create,10)
         start_count = self.max_limit if requested_max_num > self.max_limit else requested_max_num
         fake = faker.Faker()
+        prefix = self.args.prefix + ' ' if self.args.prefix != None else ''
 
         for x in range(start_count):
-            payload = {'name': fake.name()}
+            payload = {'name': prefix+fake.name()}
             r = requests.post(self.sugar_host + self.args.module, headers=self.auth_headers, json=payload)
             response = r.json()
 

@@ -17,6 +17,10 @@ Create multiple records:
 
     $ python generator.py -m Opportunities -n 3
 
+Create with a prefix slug
+
+    $ python generator.py -p "Test -"
+
 
 ## License
 
