@@ -70,7 +70,7 @@ class Sync:
 
 
     def generate_payload(self, fake, prefix):
-        if self.args.person:
+        if self.args.person or self.args.module == 'Contacts':
             payload = {
                 'first_name': prefix+fake.first_name(),
                 'last_name': fake.last_name()
