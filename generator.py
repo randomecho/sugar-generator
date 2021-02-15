@@ -71,13 +71,12 @@ class Sync:
 
     def generate_payload(self, fake, prefix):
         if self.args.person:
-            fullname = fake.name().split(' ')
             payload = {
-                'first_name': prefix+fullname[0],
-                'last_name': fullname[1]
+                'first_name': prefix+fake.first_name(),
+                'last_name': fake.last_name()
                 }
         else:
-            payload = {'name': prefix+fake.name()}
+            payload = {'name': prefix+fake.safe_color_name().capitalize() + ' ' +fake.city() + ' ' +fake.street_name()}
 
         return payload
 
