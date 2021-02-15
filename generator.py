@@ -40,6 +40,9 @@ class Sync:
             help="How many records to create")
         parser.add_argument("-p", dest="prefix",
             help="Prefix of all generated records")
+        parser.add_argument("-person", dest="person",
+            action='store_true', default=False,
+            help="Flag if person module or not")
         self.args = parser.parse_args()
 
         logging.basicConfig(filename='/tmp/sugar-generator.log',level=logging.DEBUG,format='%(asctime)s :: %(message)s')
@@ -56,7 +59,7 @@ class Sync:
         prefix = self.args.prefix + ' ' if self.args.prefix != None else ''
 
         for x in range(start_count):
-            payload = {'name': prefix+fake.name()}
+            payload = self.generate_payload(fake, prefix)
             r = requests.post(self.sugar_host + self.args.module, headers=self.auth_headers, json=payload)
             response = r.json()
 
@@ -65,6 +68,18 @@ class Sync:
             else:
                 self.logline("Error: {}".format(response))
 
+
+    def generate_payload(self, fake, prefix):
+        if self.args.person:
+            fullname = fake.name().split(' ')
+            payload = {
+                'first_name': prefix+fullname[0],
+                'last_name': fullname[1]
+                }
+        else:
+            payload = {'name': prefix+fake.name()}
+
+        return payload
 
     def load_config(self):
         try:

@@ -21,6 +21,10 @@ Create with a prefix slug
 
     $ python generator.py -p "Test -"
 
+Create records in Person-type module
+
+    $ python generator.py -person
+
 
 ## License
 
