@@ -22,6 +22,7 @@ class Sync:
     password = None
     config_file = 'config.yaml'
     oauth_token = None
+    current_user_id = None
     refresh_token = None
     auth_headers = None
     max_limit = 10
@@ -78,7 +79,23 @@ class Sync:
         else:
             payload = {'name': prefix+fake.safe_color_name().capitalize() + ' ' +fake.city() + ' ' +fake.street_name()}
 
+        payload['assigned_user_id'] = self.current_user_id
+
         return payload
+
+
+    def get_profile(self):
+        sync.logline("Get user profile...")
+
+        r = requests.get(self.sugar_host + '/me', headers=self.auth_headers)
+        response = r.json()
+
+        if 'current_user' in response and 'id' in response['current_user']:
+            self.logline("Profile: {} / {}".format(response['current_user']['id'], response['current_user']['user_name']))
+            self.current_user_id = response['current_user']['id']
+        else:
+            self.logline("Error: {}".format(response))
+
 
     def load_config(self):
         try:
@@ -127,6 +144,7 @@ class Sync:
 
     def run(self):
         self.login()
+        self.get_profile()
         self.generate_records()
 
 
