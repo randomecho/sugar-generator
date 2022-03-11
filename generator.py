@@ -95,6 +95,7 @@ class Sync:
             self.current_user_id = response['current_user']['id']
         else:
             self.logline("Error: {}".format(response))
+            exit(1)
 
 
     def load_config(self):
@@ -131,6 +132,7 @@ class Sync:
             self.logline("Logged in to {}".format(self.sugar_host))
         else:
             self.logline("! Could not log in")
+            exit(1)
 
         return
 
