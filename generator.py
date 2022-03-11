@@ -101,7 +101,7 @@ class Sync:
                 "client_secret": "",
                 "username": self.username,
                 "password": self.password,
-                "platform": "base"
+                "platform": "mobile"
             }
 
         r = requests.post(self.sugar_host + 'oauth2/token', json=data)
