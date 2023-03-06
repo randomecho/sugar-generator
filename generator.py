@@ -41,9 +41,6 @@ class Sync:
             help="How many records to create")
         parser.add_argument("-p", dest="prefix",
             help="Prefix of all generated records")
-        parser.add_argument("-person", dest="person",
-            action='store_true', default=False,
-            help="Flag if person module or not")
         self.args = parser.parse_args()
 
         logging.basicConfig(filename='/tmp/sugar-generator.log',level=logging.DEBUG,format='%(asctime)s :: %(message)s')
@@ -71,13 +68,11 @@ class Sync:
 
 
     def generate_payload(self, fake, prefix):
-        if self.args.person or self.args.module == 'Contacts':
-            payload = {
-                'first_name': prefix+fake.first_name(),
-                'last_name': fake.last_name()
-                }
-        else:
-            payload = {'name': prefix+fake.safe_color_name().capitalize() + ' ' +fake.city() + ' ' +fake.street_name()}
+        payload = {
+            'name': prefix+fake.safe_color_name().capitalize() + ' ' +fake.city() + ' ' +fake.street_name(),
+            'first_name': prefix+fake.first_name(),
+            'last_name': fake.last_name()
+            }
 
         payload['assigned_user_id'] = self.current_user_id
 
