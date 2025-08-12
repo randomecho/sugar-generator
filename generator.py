@@ -70,6 +70,8 @@ class Sync:
     def generate_payload(self, fake, prefix):
         payload = {
             'name': prefix+fake.safe_color_name().capitalize() + ' ' +fake.city() + ' ' +fake.street_name(),
+            'billing_address_street': fake.street_address(),
+            'shipping_address_street': fake.street_address(),
             'first_name': prefix+fake.first_name(),
             'last_name': fake.last_name()
             }
