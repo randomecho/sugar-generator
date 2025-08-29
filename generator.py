@@ -2,6 +2,7 @@ import argparse
 import faker
 import logging
 import requests
+import random
 import os
 import sys
 import urllib
@@ -68,15 +69,33 @@ class Sync:
 
 
     def generate_payload(self, fake, prefix):
-        payload = {
-            'name': prefix+fake.safe_color_name().capitalize() + ' ' +fake.city() + ' ' +fake.street_name(),
-            'billing_address_street': fake.street_address(),
-            'shipping_address_street': fake.street_address(),
-            'first_name': prefix+fake.first_name(),
-            'last_name': fake.last_name()
+        template = {}
+        template_base = {
+            'name': prefix+fake.color_name().capitalize() + ' ' +fake.city_suffix().capitalize() + ' '  +fake.city() + ' ' +fake.street_name(),
+            'description': fake.paragraph(),
+            'assigned_user_id': self.current_user_id,
             }
 
-        payload['assigned_user_id'] = self.current_user_id
+        template['Accounts'] = {
+            'billing_address_street': fake.street_address(),
+            'shipping_address_street': fake.street_address(),
+            }
+
+        template['Leads'] = {
+            'department': fake.job(),
+            }
+
+        template['Opportunities'] = {
+            'sales_status': random.choice(['New', 'In Progress']),
+            'amount': fake.random_number(),
+            'date_closed': fake.iso8601(),
+            }
+
+
+        payload = template_base
+
+        if self.args.module in template:
+            payload.update(template[self.args.module])
 
         return payload
 
